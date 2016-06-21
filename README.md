@@ -29,15 +29,19 @@ $ shellshoccar.sh --prefix=~/shellshoccar install
 $ shellshoccar.sh uninstall
 ```
 
-すると/usr/local/shellshoccarディレクトリーが消される。ただし、/usr/local/shellshoccar/log/shellshoccar_inst.logというファイルが存在することを事前確認し、それがなければアンインストールは拒否される。
+すると/usr/local/shellshoccarディレクトリーが消される。ただし本コマンドは、/usr/local/shellshoccar/log/shellshoccar_inst.logというファイルが存在することを事前確認し、それがなければアンインストールは拒否するようになっている。
 
 一般ユーザーが自分のディレクトリーにインストールしたものをアンインストールする場合は、--prefixオプションを使い、例えば次のようにする。
+
+もしそのファイルを消してしまったのであれば、 `rm -rf /usr/local/shellshoccar` を実行して手動で消せばよい。
 
 ```sh:
 $ shellshoccar.sh --prefix=~/shellshoccar uninstall
 ```
 
-すると~/shellshoccarディレクトリーが消される。ただし、~/shellshoccar/log/shellshoccar_inst.logというファイルが存在することを事前確認し、それがなければアンインストールは拒否される。
+すると~/shellshoccarディレクトリーが消される。ただし本コマンドは、~/shellshoccar/log/shellshoccar_inst.logというファイルが存在することを事前確認し、それがなければアンインストールは拒否するようになっている。
+
+もしそのファイルを消してしまったのであれば、 `rm -rf ~/shellshoccar` を実行して手動で消せばよい。
 
 ## 依存コマンド
 
@@ -45,5 +49,3 @@ $ shellshoccar.sh --prefix=~/shellshoccar uninstall
 
 * gitコマンド
 * unzipコマンドとWebアクセスのためのコマンドとしてcurlまたはwget
-
-
