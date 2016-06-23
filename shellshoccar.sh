@@ -39,7 +39,7 @@ __USAGE
 
 # --- initialize -----------------------------------------------------
 set -u
-PATH='/usr/bin:/bin'
+PATH="/usr/bin:/bin:$PATH"
 IFS=$(printf ' \t\n_'); IFS=${IFS%_}
 export IFS LC_ALL=C LANG=C PATH
 umask 0000
