@@ -124,7 +124,7 @@ if type git >/dev/null 2>&1; then
   fSuccess=0
   while :; do
     git clone https://github.com/ShellShoccar-jpn/Open-usp-Tukubai.git || break
-    mv -f Open-usp-Tukubai/COMMANDS.SH/* "${Dir_prefix%/}/bin" || break
+    mv -f Open-usp-Tukubai/COMMANDS.SH/* ../bin || break
     fSuccess=1
   break; done
   case $fSuccess in
@@ -137,7 +137,7 @@ if type git >/dev/null 2>&1; then
   fSuccess=0
   while :; do
     git clone https://github.com/ShellShoccar-jpn/misc-tools.git || break
-    mv -f misc-tools/[a-z]* "${Dir_prefix%/}/bin" || break
+    mv -f misc-tools/[a-z]* ../bin || break
     fSuccess=1
   break; done
   case $fSuccess in
@@ -150,7 +150,7 @@ if type git >/dev/null 2>&1; then
   fSuccess=0
   while :; do
     git clone https://github.com/ShellShoccar-jpn/Parsrs.git || break
-    mv -f Parsrs/[a-z]*  "${Dir_prefix%/}/bin" || break
+    mv -f Parsrs/[a-z]*  ../bin || break
     fSuccess=1
   break; done
   case $fSuccess in
@@ -195,7 +195,7 @@ while type unzip >/dev/null 2>&1; do
     case $? in [!0]*) break;; esac
     unzip dlfile.zip || break
     chmod +x Open-usp-Tukubai-master/COMMANDS.SH/*
-    mv -f Open-usp-Tukubai-master/COMMANDS.SH/* "${Dir_prefix%/}/bin" || break
+    mv -f Open-usp-Tukubai-master/COMMANDS.SH/* ../bin || break
     fSuccess=1
   break; done
   case $fSuccess in
@@ -216,7 +216,7 @@ while type unzip >/dev/null 2>&1; do
     case $? in [!0]*) break;; esac
     unzip dlfile.zip || break
     chmod +x misc-tools-master/COMMANDS.SH/*
-    mv -f misc-tools-master/* "${Dir_prefix%/}/bin" || break
+    mv -f misc-tools-master/* ../bin || break
     fSuccess=1
   break; done
   case $fSuccess in
@@ -237,7 +237,7 @@ while type unzip >/dev/null 2>&1; do
     case $? in [!0]*) break;; esac
     unzip dlfile.zip || break
     chmod +x Parsrs-master/COMMANDS.SH/*
-    mv -f Parsrs-master/* "${Dir_prefix%/}/bin" || break
+    mv -f Parsrs-master/* ../bin || break
     fSuccess=1
   break; done
   case $fSuccess in
