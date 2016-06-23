@@ -109,6 +109,7 @@ cd "${Dir_prefix%/}/tmp" || {
   echo "${0##*/}: Not enough permission to install this to $Dir_prefix" 1>&2
   exit 1
 }
+File_instlog="$(pwd)/../log/${File_instlog##*/}"
 echo 1 > 'permissioncheck' 2>/dev/null || {
   echo "${0##*/}: Not enough permission to install this to $Dir_prefix" 1>&2
   exit 1
