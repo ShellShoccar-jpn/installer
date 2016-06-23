@@ -172,7 +172,8 @@ if type git >/dev/null 2>&1; then
   echo "*** $s" 1>&2
   date "+%Y/%m/%d-%H:%M:%S $s" >> "$File_instlog"
   case $ret in 0)
-    echo "Finally, Add the directory \"${Dir_prefix%/}/bin\" to \$PATH" 1>&2;;
+    cd ../bin
+    echo "Finally, Add the directory \"$(pwd)\" to \$PATH" 1>&2;;
   esac
   exit $ret
 fi
@@ -259,7 +260,8 @@ while type unzip >/dev/null 2>&1; do
   echo "*** $s" 1>&2
   date "+%Y/%m/%d-%H:%M:%S $s" >> "$File_instlog"
   case $ret in 0)
-    echo "Finally, Add the directory \"${Dir_prefix%/}/bin\" to \$PATH" 1>&2;;
+    cd ../bin
+    echo "Finally, Add the directory \"$(pwd)\" to \$PATH" 1>&2;;
   esac
   exit $ret
 break; done
