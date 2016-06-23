@@ -178,7 +178,7 @@ if type git >/dev/null 2>&1; then
 fi
 
 # --- B) if unzip and (curl || wget) commands are ready, install with them
-while type unzip; do
+while type unzip >/dev/null 2>&1; do
   # B-01) prepare
   ok=0
   ng=0
