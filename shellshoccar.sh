@@ -15,7 +15,7 @@
 #
 # Usage : shellshoccar.sh [--prefix=/PATH/TO/INSTALL/DIR] <install|uninstall>
 #
-# Written by Rich Mikan (richmikan[at]richlab.org) at 2016/06/21
+# Written by Rich Mikan (richmikan[at]richlab.org) at 2016/07/14
 #
 # This is a public-domain software. It measns that all of the people
 # can use this with no restrictions at all. By the way, I am fed up
@@ -29,7 +29,7 @@
 print_usage_and_exit () {
   cat <<-__USAGE 1>&2
 	Usage   : ${0##*/} [--prefix=/PATH/TO/INSTALL/DIR] <install|uninstall>
-	Version : Tue Jun 21 15:51:53 JST 2016
+	Version : Thu Jul 14 18:49:03 JST 2016
 __USAGE
   exit 1
 }
@@ -109,7 +109,7 @@ cd "${Dir_prefix%/}/tmp" || {
   echo "${0##*/}: Not enough permission to install this to $Dir_prefix" 1>&2
   exit 1
 }
-File_instlog="$(pwd)/../log/${File_instlog##*/}"
+File_instlog="$(cd "../log"; pwd)/${File_instlog##*/}"
 echo 1 > 'permissioncheck' 2>/dev/null || {
   echo "${0##*/}: Not enough permission to install this to $Dir_prefix" 1>&2
   exit 1
@@ -161,6 +161,7 @@ if type git >/dev/null 2>&1; then
   esac
   rm -rf "${Dir_prefix%/}/tmp/"*
   # A-99) finish with reporting
+  cd ../bin
   rm -rf "${Dir_prefix%/}/tmp"
   case $ng in
     0) s='All command sets are installed successfully'
@@ -173,7 +174,6 @@ if type git >/dev/null 2>&1; then
   echo "*** $s" 1>&2
   date "+%Y/%m/%d-%H:%M:%S $s" >> "$File_instlog"
   case $ret in 0)
-    cd ../bin
     echo "Finally, Add the directory \"$(pwd)\" to \$PATH" 1>&2;;
   esac
   exit $ret
