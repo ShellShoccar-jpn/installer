@@ -217,7 +217,7 @@ while type unzip >/dev/null 2>&1; do
     fi
     case $? in [!0]*) break;; esac
     unzip dlfile.zip || break
-    chmod +x misc-tools-master/COMMANDS.SH/*
+    chmod +x misc-tools-master/*
     mv -f misc-tools-master/* ../bin || break
     fSuccess=1
   break; done
@@ -238,7 +238,7 @@ while type unzip >/dev/null 2>&1; do
     fi
     case $? in [!0]*) break;; esac
     unzip dlfile.zip || break
-    chmod +x Parsrs-master/COMMANDS.SH/*
+    chmod +x Parsrs-master/*
     mv -f Parsrs-master/* ../bin || break
     fSuccess=1
   break; done
