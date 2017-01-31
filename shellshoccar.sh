@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 
 ######################################################################
@@ -15,7 +15,7 @@
 #
 # Usage : shellshoccar.sh [--prefix=/PATH/TO/INSTALL/DIR] <install|uninstall>
 #
-# Written by Rich Mikan (richmikan[at]richlab.org) at 2016/07/14
+# Written by Rich Mikan (richmikan[at]richlab.org) at 2017/01/31
 #
 # This is a public-domain software. It measns that all of the people
 # can use this with no restrictions at all. By the way, I am fed up
@@ -27,10 +27,10 @@
 
 # --- FUNC: print the usage and exit ---------------------------------
 print_usage_and_exit () {
-  cat <<-__USAGE 1>&2
+  cat <<-USAGE 1>&2
 	Usage   : ${0##*/} [--prefix=/PATH/TO/INSTALL/DIR] <install|uninstall>
-	Version : Thu Jul 14 18:49:03 JST 2016
-__USAGE
+	Version : 2017-01-31 12:39:33 JST
+	USAGE
   exit 1
 }
 
@@ -38,11 +38,10 @@ __USAGE
 # ===== PREPARATION ==================================================
 
 # --- initialize -----------------------------------------------------
-set -u
-PATH="/usr/bin:/bin:$PATH"
-IFS=$(printf ' \t\n_'); IFS=${IFS%_}
-export IFS LC_ALL=C LANG=C PATH
-umask 0000
+set -eu
+umask 0022
+export LC_ALL=C
+export PATH="$(command -p getconf PATH):${PATH:-}"
 
 # --- default values -------------------------------------------------
 Dir_prefix='/usr/local/shellshoccar'
@@ -85,7 +84,7 @@ case "$mode" in uninstall)
 }
 
 # --- uninstall ------------------------------------------------------
-rm -rf "$Dir_prefix" || {
+(cd "$Dir_prefix/.." && rm -rf "$Dir_prefix") || {
   echo "${0##*/}: Failed to uninstall" 1>&2
   exit 1
 }
@@ -249,6 +248,7 @@ while type unzip >/dev/null 2>&1; do
   esac
   rm -rf "${Dir_prefix%/}/tmp/"*
   # A-99) finish with reporting
+  cd ../bin
   rm -rf "${Dir_prefix%/}/tmp"
   case $ng in
     0) s='All command sets are installed successfully'
@@ -261,19 +261,18 @@ while type unzip >/dev/null 2>&1; do
   echo "*** $s" 1>&2
   date "+%Y/%m/%d-%H:%M:%S $s" >> "$File_instlog"
   case $ret in 0)
-    cd ../bin
     echo "Finally, Add the directory \"$(pwd)\" to \$PATH" 1>&2;;
   esac
   exit $ret
 break; done
 
 # --- C) Show error message when could not install -------------------
-cat <<-__ERRORMESSAGE 1>&2
-  *** To install this, it is required the following commands
-  
-  (A) "git" command, otherwise
-  (B) "unzip" command and either "curl" or "wget" command
-__ERRORMESSAGE
+cat <<-ERRORMESSAGE 1>&2
+	*** To install this, it is required the following commands
+	
+	(A) "git" command, otherwise
+	(B) "unzip" command and either "curl" or "wget" command
+	ERRORMESSAGE
 exit 1
 
 # --- end of the block -----------------------------------------------
