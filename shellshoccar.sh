@@ -15,7 +15,7 @@
 #
 # Usage : shellshoccar.sh [--prefix=/PATH/TO/INSTALL/DIR] <install|uninstall>
 #
-# Written by Rich Mikan (richmikan[at]richlab.org) at 2017/01/31
+# Written by Rich Mikan (richmikan[at]richlab.org) at 2019-01-25
 #
 # This is a public-domain software. It measns that all of the people
 # can use this with no restrictions at all. By the way, I am fed up
@@ -29,7 +29,7 @@
 print_usage_and_exit () {
   cat <<-USAGE 1>&2
 	Usage   : ${0##*/} [--prefix=/PATH/TO/INSTALL/DIR] <install|uninstall>
-	Version : 2017-01-31 12:39:33 JST
+	Version : 2019-01-25 17:35:21 JST
 	USAGE
   exit 1
 }
@@ -68,7 +68,18 @@ case "$mode" in '') print_usage_and_exit;; esac
 
 # ===== MAIN (common) ================================================
 
-case "$Dir_prefix" in /*) :;; *) Dir_prefix="./$Dir_prefix";; esac
+case "$Dir_prefix" in /*) :;; */) Dir_prefix=${Dir_prefix%/};; esac
+case "$Dir_prefix" in
+   /*) :                                                            ;;
+  */*) s=$(eval cd "${Dir_prefix%/*}" && pwd)
+       case "$s" in '')
+         echo "${0##*/}: directory by --prefix is not proper" 1>&2
+         exit 1                                                   ;;
+       esac
+       Dir_prefix="$s/${Dir_prefix##*/}"                            ;;
+    *) s=$(pwd)
+       Dir_prefix="$s/$Dir_prefix"                                  ;;
+esac
 File_instlog="${Dir_prefix%/}/log/shellshoccar_inst.log"
 
 
