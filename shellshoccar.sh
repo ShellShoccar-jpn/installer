@@ -147,6 +147,7 @@ if type git >/dev/null 2>&1; then
   fSuccess=0
   while :; do
     git clone https://github.com/ShellShoccar-jpn/Open-usp-Tukubai.git || break
+    rm -rf Open-usp-Tukubai/COMMANDS.SH/previous.ver
     mv -f Open-usp-Tukubai/COMMANDS.SH/* ../bin || break
     fSuccess=1
   break; done
@@ -221,6 +222,7 @@ while type unzip >/dev/null 2>&1; do
     fi
     case $? in [!0]*) break;; esac
     unzip dlfile.zip || break
+    rm -rf Open-usp-Tukubai-master/COMMANDS.SH/previous.ver
     chmod +x Open-usp-Tukubai-master/COMMANDS.SH/*
     mv -f Open-usp-Tukubai-master/COMMANDS.SH/* ../bin || break
     fSuccess=1
@@ -242,8 +244,8 @@ while type unzip >/dev/null 2>&1; do
     fi
     case $? in [!0]*) break;; esac
     unzip dlfile.zip || break
-    chmod +x misc-tools-master/[a-z0-9]* misc-tools/C_SRC/MAKE.sh
-    misc-tools/C_SRC/MAKE.sh -u || {
+    chmod +x misc-tools-master/[a-z0-9]* misc-tools-master/C_SRC/MAKE.sh
+    misc-tools-master/C_SRC/MAKE.sh -u || {
       echo "${0##*/}: Some C-prog couldn't be compiled" 1>&2
     }
     mv -f misc-tools-master/[a-z0-9]* ../bin || break
