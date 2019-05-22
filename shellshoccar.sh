@@ -15,7 +15,7 @@
 #
 # Usage : shellshoccar.sh [--prefix=/PATH/TO/INSTALL/DIR] <install|uninstall>
 #
-# Written by Rich Mikan (richmikan[at]richlab.org) at 2019-01-25
+# Written by Rich Mikan (richmikan[at]richlab.org) at 2019-05-22
 #
 # This is a public-domain software. It measns that all of the people
 # can use this with no restrictions at all. By the way, I am fed up
@@ -23,31 +23,41 @@
 #
 ######################################################################
 
-# ===== FUNCTIONS ====================================================
 
-# --- FUNC: print the usage and exit ---------------------------------
+######################################################################
+# Initial Configuration
+######################################################################
+
+# === Initialize shell environment ===================================
+set -u
+umask 0022
+export LC_ALL=C
+type command >/dev/null 2>&1 && type getconf >/dev/null 2>&1 &&
+export PATH="$(command -p getconf PATH)${PATH+:}${PATH-}"
+export POSIXLY_CORRECT=1 # to make Linux comply with POSIX
+export UNIX_STD=2003     # to make HP-UX comply with POSIX
+
+# === Define the functions for printing usage and error message ======
 print_usage_and_exit () {
   cat <<-USAGE 1>&2
 	Usage   : ${0##*/} [--prefix=/PATH/TO/INSTALL/DIR] <install|uninstall>
-	Version : 2019-01-25 17:35:21 JST
+	Version : 2019-05-22 21:32:36 JST
 	USAGE
   exit 1
 }
 
 
-# ===== PREPARATION ==================================================
 
-# --- initialize -----------------------------------------------------
-set -eu
-umask 0022
-export LC_ALL=C
-export PATH="$(command -p getconf PATH):${PATH:-}"
+######################################################################
+# Parse arguments
+######################################################################
 
-# --- default values -------------------------------------------------
+# === Get the options ================================================
+# --- initialize option parameters -----------------------------------
 Dir_prefix='/usr/local/shellshoccar'
 mode=''
-
-# --- parse the arguments --------------------------------------------
+#
+# --- get them -------------------------------------------------------
 while [ $# -gt 0 ]; do
   case "${1:-}" in
     --prefix=*)       Dir_prefix=$(printf '%s' "${1#--prefix=}" | tr -d '\n')
@@ -66,8 +76,12 @@ done
 case "$mode" in '') print_usage_and_exit;; esac
 
 
-# ===== MAIN (common) ================================================
 
+######################################################################
+# Main
+######################################################################
+
+# === Prepare ========================================================
 case "$Dir_prefix" in /*) :;; */) Dir_prefix=${Dir_prefix%/};; esac
 case "$Dir_prefix" in
    /*) :                                                            ;;
@@ -82,34 +96,32 @@ case "$Dir_prefix" in
 esac
 File_instlog="${Dir_prefix%/}/log/shellshoccar_inst.log"
 
-
-# ===== MAIN (for uninstaill) ========================================
-
+# === MAIN (for uninstaill) ==========================================
+#
 # --- start of the block ---------------------------------------------
 case "$mode" in uninstall)
-
+#
 # --- confirm --------------------------------------------------------
 [ -f "$File_instlog" ] || {
   echo "${0##*/}: No installing record! (make sure the directory)" 1>&2
   exit 1
 }
-
+#
 # --- uninstall ------------------------------------------------------
 (cd "$Dir_prefix/.." && rm -rf "$Dir_prefix") || {
   echo "${0##*/}: Failed to uninstall" 1>&2
   exit 1
 }
 exit 0
-
+#
 # --- end of the block -----------------------------------------------
 ;; esac
 
-
 # ===== MAIN (for instaill) ==========================================
-
+#
 # --- start of the block ---------------------------------------------
 case "$mode" in install)
-
+#
 # --- make target directories ----------------------------------------
 mkdir -p "${Dir_prefix%/}/bin" "${Dir_prefix%/}/log" "${Dir_prefix%/}/tmp" || {
   echo "${0##*/}: Cannot make the directory of Shellshoccar" 1>&2
@@ -125,7 +137,7 @@ echo 1 > 'permissioncheck' 2>/dev/null || {
   exit 1
 }
 rm -rf *
-
+#
 # --- A) if git command is ready, install with it --------------------
 if type git >/dev/null 2>&1; then
   # A-01) prepare
@@ -148,6 +160,9 @@ if type git >/dev/null 2>&1; then
   fSuccess=0
   while :; do
     git clone https://github.com/ShellShoccar-jpn/misc-tools.git || break
+    misc-tools/C_SRC/MAKE.sh -u || {
+      echo "${0##*/}: Some C-prog couldn't be compiled" 1>&2
+    }
     mv -f misc-tools/[a-z0-9]* ../bin || break
     fSuccess=1
   break; done
@@ -188,7 +203,7 @@ if type git >/dev/null 2>&1; then
   esac
   exit $ret
 fi
-
+#
 # --- B) if unzip and (curl || wget) commands are ready, install with them
 while type unzip >/dev/null 2>&1; do
   # B-01) prepare
@@ -227,7 +242,10 @@ while type unzip >/dev/null 2>&1; do
     fi
     case $? in [!0]*) break;; esac
     unzip dlfile.zip || break
-    chmod +x misc-tools-master/[a-z0-9]*
+    chmod +x misc-tools-master/[a-z0-9]* misc-tools/C_SRC/MAKE.sh
+    misc-tools/C_SRC/MAKE.sh -u || {
+      echo "${0##*/}: Some C-prog couldn't be compiled" 1>&2
+    }
     mv -f misc-tools-master/[a-z0-9]* ../bin || break
     fSuccess=1
   break; done
@@ -276,7 +294,7 @@ while type unzip >/dev/null 2>&1; do
   esac
   exit $ret
 break; done
-
+#
 # --- C) Show error message when could not install -------------------
 cat <<-ERRORMESSAGE 1>&2
 	*** To install this, it is required the following commands
@@ -285,6 +303,13 @@ cat <<-ERRORMESSAGE 1>&2
 	(B) "unzip" command and either "curl" or "wget" command
 	ERRORMESSAGE
 exit 1
-
+#
 # --- end of the block -----------------------------------------------
 ;; esac
+
+
+######################################################################
+# Finish
+######################################################################
+
+exit 0
